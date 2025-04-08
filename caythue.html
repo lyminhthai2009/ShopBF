@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Đơn Cày Thuê - Shop BloxFruits</title>
+    <style>
+        /* --- CSS Reset (Copy từ trang chủ nếu cần) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f2f5; /* Giữ màu nền giống trang chủ */
+            padding: 20px; /* Thêm padding quanh trang */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px; /* Giới hạn độ rộng form cho dễ nhìn */
+            margin: 30px auto; /* Căn giữa và tạo khoảng cách trên dưới */
+            background-color: #ffffff; /* Nền trắng cho vùng nội dung */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #0056b3; /* Màu giống tiêu đề trang chủ */
+            margin-bottom: 15px;
+        }
+         h1::after { /* Tái sử dụng gạch chân tiêu đề */
+             content: '';
+             display: block;
+             width: 60px;
+             height: 3px;
+             background: #007bff;
+             margin: 10px auto 25px; /* Tăng khoảng cách dưới */
+         }
+
+        .instructions {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        /* --- Form Styling --- */
+        .order-form .form-group {
+            margin-bottom: 20px; /* Khoảng cách giữa các trường */
+        }
+
+        .order-form label {
+            display: block; /* Nhãn hiển thị trên 1 dòng riêng */
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .order-form input[type="text"],
+        .order-form input[type="password"],
+        .order-form input[type="tel"],
+        .order-form input[type="email"],
+        .order-form select,
+        .order-form textarea {
+            width: 100%; /* Chiếm hết chiều rộng */
+            padding: 12px; /* Tăng padding cho dễ nhập */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .order-form input:focus,
+        .order-form select:focus,
+        .order-form textarea:focus {
+            border-color: #007bff; /* Highlight viền khi focus */
+            outline: none; /* Bỏ outline mặc định */
+        }
+
+        .order-form textarea {
+            min-height: 100px; /* Chiều cao tối thiểu cho ghi chú */
+            resize: vertical; /* Chỉ cho phép thay đổi chiều cao */
+        }
+
+        /* === CẢNH BÁO BẢO MẬT QUAN TRỌNG === */
+        .security-warning {
+            background-color: #fff3cd; /* Nền vàng nhạt */
+            color: #856404; /* Chữ nâu đậm */
+            border: 1px solid #ffeeba; /* Viền vàng */
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px; /* Khoảng cách với trường mật khẩu */
+            font-size: 0.9em;
+        }
+        .security-warning strong {
+             color: #dc3545; /* Nhấn mạnh chữ đỏ */
+        }
+
+        /* --- Nút Gửi --- */
+        .submit-button {
+            display: block; /* Nút chiếm cả hàng */
+            width: 100%;   /* Chiều rộng tối đa */
+            background-color: #28a745; /* Màu xanh lá cây cho gửi đơn */
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px; /* Khoảng cách với trường cuối */
+        }
+
+        .submit-button:hover {
+            background-color: #218838; /* Màu xanh lá đậm hơn */
+            transform: translateY(-2px);
+        }
+
+        /* Thông báo thành công (ẩn ban đầu) */
+        #success-message {
+            display: none; /* Ẩn ban đầu */
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Đánh dấu trường bắt buộc */
+         label .required {
+             color: red;
+             margin-left: 3px;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Đặt Đơn Cày Thuê</h1>
+        <p class="instructions">
+            Vui lòng điền đầy đủ và chính xác thông tin bên dưới. Chúng tôi sẽ liên hệ với bạn để xác nhận đơn hàng và báo giá chi tiết trong thời gian sớm nhất.
+        </p>
+
+        <form id="boosting-order-form" class="order-form" action="#" method="POST">
+             <!-- Action="#" và method="POST" là ví dụ, cần backend để xử lý -->
+
+            <div class="form-group">
+                <label for="game">Chọn Game:<span class="required">*</span></label>
+                <select id="game" name="game" required>
+                    <option value="">-- Vui lòng chọn game --</option>
+                    <option value="BloxFruits">Blox Fruits</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="account_id">Tên đăng nhập / ID Game:<span class="required">*</span></label>
+                <input type="text" id="account_id" name="account_id" placeholder="Nhập ID hoặc tên đăng nhập game" required>
+            </div>
+
+            <div class="form-group">
+                <label for="account_password">Mật khẩu:<span class="required">*</span></label>
+                <input type="password" id="account_password" name="account_password" placeholder="Nhập mật khẩu tài khoản game" required>
+                 <!-- === CẢNH BÁO BẢO MẬT === -->
+                <div class="security-warning">
+                    <strong>Cảnh báo!</strong> Việc cung cấp mật khẩu tiềm ẩn rủi ro bảo mật. Shop cam kết bảo mật thông tin của bạn. Bạn nên đổi mật khẩu sau khi hoàn thành đơn cày thuê. Bạn hãy thêm mã PIN, 2FA cho tài khoản.Shop không chịu trách nhiệm nếu tài khoản của bạn gặp vấn đề do lộ thông tin từ nguồn khác.
+                </div>
+            </div>
+
+             <div class="form-group">
+                <label for="server">Tốc độ: (Nếu có):</label>
+                <input type="text" id="server" name="server" placeholder="Ví dụ: Nhanh, Chậm. ( Lưu ý: Tốc độ càng nhanh <=> Giá tiền càng cao, bạn có thể liên hệ với shop để tham khảo ạ! )">
+            </div>
+
+            <div class="form-group">
+                <label for="current_rank">Level hiện tại:<span class="required">*</span></label>
+                <input type="text" id="current_rank" name="current_rank" placeholder="Ví dụ: Level 1, Level 50..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="desired_rank">Rank / Level mong muốn:<span class="required">*</span></label>
+                <input type="text" id="desired_rank" name="desired_rank" placeholder="Ví dụ: Level 1500, Level Max..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_info">Thông tin liên hệ (SĐT/Zalo/Facebook):<span class="required">*</span></label>
+                <input type="text" id="contact_info" name="contact_info" placeholder="Nhập số điện thoại hoặc link Facebook/Zalo" required>
+            </div>
+
+
+            <button type="submit" class="submit-button">Gửi Yêu Cầu Cày Thuê</button>
+
+        </form>
+
+        <!-- Thông báo thành công -->
+        <div id="success-message">
+            Yêu cầu của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ lại với bạn sớm nhất qua thông tin bạn đã cung cấp để xác nhận và báo giá. Xin cảm ơn!
+        </div>
+
+    </div> <!-- End .container -->
+
+    <script>
+        // Lấy form và thông báo thành công
+        const orderForm = document.getElementById('boosting-order-form');
+        const successMessage = document.getElementById('success-message');
+
+        // Xử lý khi form được gửi đi
+        orderForm.addEventListener('submit', function(event) {
+            // Ngăn chặn hành vi gửi form mặc định (tải lại trang)
+            event.preventDefault();
+
+            // --- PHẦN QUAN TRỌNG: Xử lý dữ liệu form ---
+            // Trong một ứng dụng thực tế, bạn sẽ làm những việc sau ở đây:
+            // 1. Thu thập dữ liệu từ các trường input:
+            //    const game = document.getElementById('game').value;
+            //    const accountId = document.getElementById('account_id').value;
+            //    // ... lấy hết các trường ...
+
+            // 2. Gửi dữ liệu này đến MÁY CHỦ (BACKEND) bằng kỹ thuật như AJAX (Fetch API hoặc XMLHttpRequest):
+            //    fetch('/api/submit-boosting-order', { // Đường dẫn API xử lý trên server
+            //        method: 'POST',
+            //        headers: { 'Content-Type': 'application/json' },
+            //        body: JSON.stringify({ game, accountId, ... }) // Gửi dữ liệu dạng JSON
+            //    })
+            //    .then(response => response.json())
+            //    .then(data => {
+            //        if (data.success) {
+            //            // Ẩn form và hiện thông báo thành công
+            //            orderForm.style.display = 'none';
+            //            successMessage.style.display = 'block';
+            //            // Có thể thêm: Cuộn lên đầu trang để user thấy thông báo
+            //            window.scrollTo(0, 0);
+            //        } else {
+            //            // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
+            //            alert('Có lỗi xảy ra: ' + data.message);
+            //        }
+            //    })
+            //    .catch(error => {
+            //        console.error('Lỗi khi gửi form:', error);
+            //        alert('Không thể gửi yêu cầu. Vui lòng thử lại sau.');
+            //    });
+
+            // --- VÌ ĐÂY LÀ DEMO CHỈ CÓ FRONTEND, CHÚNG TA SẼ GIẢ LẬP VIỆC GỬI THÀNH CÔNG ---
+            console.log('Form data (simulation):', new FormData(orderForm)); // In dữ liệu ra console để kiểm tra
+            // Ẩn form
+            orderForm.style.display = 'none';
+            // Hiện thông báo thành công
+            successMessage.style.display = 'block';
+            // Cuộn lên đầu trang để người dùng thấy thông báo
+             const container = document.querySelector('.container');
+             if (container) {
+                 container.scrollIntoView({ behavior: 'smooth' });
+             } else {
+                 window.scrollTo(0, 0);
+             }
+
+            // Bạn có thể xóa phần giả lập này khi tích hợp backend thực sự.
+        });
+    </script>
+
+</body>
+</html>
