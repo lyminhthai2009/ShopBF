@@ -1,411 +1,142 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOP BLOXFRUITS - Trang Chủ Sang Trọng</title>
-    <style>
-        /* --- CSS Reset (Đơn giản) --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+// Lấy các phần tử DOM (giống như trước)
+const menuToggle = document.getElementById('menu-toggle');
+const sidenav = document.getElementById('mySidenav');
+const overlay = document.getElementById('overlay');
+const body = document.body;
+const mainContent = document.getElementById('main-content'); // Không dùng nhiều nữa nhưng giữ lại
+
+// Lấy các section nội dung
+const homepageContent = document.getElementById('homepage-content');
+const orderFormSection = document.getElementById('order-form-section');
+// Thêm các section khác nếu có
+
+// Lấy các nút/link trong menu
+const orderServiceLink = document.getElementById('order-service-link');
+const logoutLink = document.getElementById('logout-link');
+const goHomeLink = document.getElementById('go-home-link');
+
+// Lấy form và thông báo
+const serviceOrderForm = document.getElementById('service-order-form');
+const orderSuccessMessage = document.getElementById('order-success-message');
+
+// Hàm mở Sidenav
+function openNav() {
+    body.classList.add('sidenav-open');
+    body.classList.add('no-scroll'); // Ngăn cuộn nền
+}
+
+// Hàm đóng Sidenav
+function closeNav() {
+    body.classList.remove('sidenav-open');
+    body.classList.remove('no-scroll'); // Cho phép cuộn lại
+}
+
+// Hàm hiển thị một section và ẩn các section khác
+function showSection(sectionIdToShow) {
+    // Lấy tất cả các section có class 'page-section'
+    const sections = document.querySelectorAll('.page-section');
+    sections.forEach(section => {
+        if (section.id === sectionIdToShow) {
+            section.classList.add('active'); // Hiển thị section mong muốn
+        } else {
+            section.classList.remove('active'); // Ẩn các section khác
         }
+    });
+    // Cuộn lên đầu trang để người dùng thấy section mới
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            /* === THAY ĐỔI: Màu nền xám trắng sang trọng === */
-            background-color: #f0f2f5;
-            transition: margin-left .5s;
+// --- Gán Sự kiện ---
+
+// Nút mở/đóng menu
+if (menuToggle) {
+    menuToggle.addEventListener('click', function(event) {
+        event.stopPropagation();
+        if (body.classList.contains('sidenav-open')) {
+            closeNav();
+        } else {
+            openNav();
         }
+    });
+}
 
-        .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: auto;
-            overflow: hidden;
-        }
+// Overlay để đóng menu
+if (overlay) {
+    overlay.addEventListener('click', closeNav);
+}
 
-        /* --- Header --- */
-        header {
-            background: #ffffff;
-            color: #333;
-            padding: 15px 0;
-            border-bottom: 1px solid #e7e7e7;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
+// Nút "Đặt Dịch Vụ" trong menu
+if (orderServiceLink) {
+    orderServiceLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        showSection('order-form-section'); // Hiển thị form đặt hàng
+        closeNav(); // Đóng menu
+    });
+}
 
-        /* --- Nút Hamburger Menu --- */
-        .menu-toggle {
-            font-size: 30px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #555; /* Màu xám đậm hơn chút */
-            padding: 0 15px 0 0;
-             transition: color 0.3s;
-        }
-        .menu-toggle:hover {
-            color: #000; /* Đen khi hover */
-        }
+// Nút "Đăng Xuất" trong menu
+if (logoutLink) {
+    logoutLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        alert('Chức năng Đăng xuất chưa được cài đặt!'); // Thông báo tạm
+        // Xử lý đăng xuất thực tế ở đây (nếu có backend)
+        closeNav();
+    });
+}
 
-        /* --- Logo/Branding --- */
-        #branding {
-            flex-grow: 1;
-            text-align: center;
-        }
-        #branding h1 { margin: 0; font-size: 1.8em; }
-        #branding a { color: #333; text-decoration: none; font-weight: bold; }
+// Nút "Trang Chủ" trong menu
+if (goHomeLink) {
+    goHomeLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        showSection('homepage-content'); // Hiển thị lại trang chủ
+        closeNav();
+    });
+}
 
-        /* --- Side Navigation Panel --- */
-        .sidenav {
-            height: 100%;
-            width: 0; /* Bắt đầu ẩn */
-            position: fixed;
-            z-index: 1001;
-            top: 0;
-            left: 0;
-            background-color: #222; /* Nền tối */
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
+// Xử lý gửi form Đặt Dịch Vụ
+if (serviceOrderForm) {
+    serviceOrderForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Ngăn gửi form mặc định
 
-        .sidenav a, .sidenav .dropdown-toggle {
-            padding: 10px 15px 10px 32px;
-            text-decoration: none;
-            font-size: 1.1em;
-            color: #a0a0a0; /* Màu xám nhạt hơn */
-            display: block;
-            transition: 0.3s;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-        }
+        // --- Giả lập gửi dữ liệu thành công ---
+        // 1. Thu thập dữ liệu (ví dụ để gửi đi sau này)
+        const formData = new FormData(serviceOrderForm);
+        const data = {};
+        formData.forEach((value, key) => { data[key] = value; });
+        console.log("Dữ liệu đơn hàng (giả lập gửi đi):", data);
+        alert(`Đã nhận yêu cầu:\nTài khoản: ${data.account_username}\nLiên hệ: ${data.contact_phone || data.contact_fb}\nDịch vụ: ${data.service_request}\n\nChúng tôi sẽ liên hệ lại sớm! (Đây là thông báo giả lập)`);
 
-        .sidenav a:hover, .sidenav .dropdown-toggle:hover {
-            color: #ffffff; /* Trắng sáng khi hover */
-        }
-
-        /* === NÚT ĐÓNG (X) TRONG SIDENAV === */
-        .sidenav .closebtn {
-            position: absolute; /* Định vị tuyệt đối trong sidenav */
-            top: 15px;        /* Cách lề trên */
-            right: 25px;       /* Cách lề phải */
-            font-size: 36px;   /* Kích thước lớn, dễ nhấn */
-            margin-left: 50px; /* Không quá cần thiết với absolute, nhưng giữ lại */
-            color: #818181;   /* Màu xám ban đầu */
-            padding: 0;       /* Bỏ padding thừa */
-            text-decoration: none; /* Bỏ gạch chân */
-            line-height: 1;     /* Căn chỉnh chiều dọc tốt hơn */
-             transition: color 0.3s; /* Hiệu ứng chuyển màu */
-        }
-         .sidenav .closebtn:hover {
-             color: #f1f1f1; /* Sáng hơn khi hover */
-         }
-
-        /* --- Dropdown trong Sidenav --- */
-        .sidenav-dropdown-container {
-            display: none;
-            background-color: #2a2a2a;
-            padding-left: 8px;
-        }
-        .sidenav-dropdown-container a { padding-left: 40px; font-size: 1em; }
-        .sidenav .disabled-link { color: #666 !important; cursor: not-allowed !important; pointer-events: none; }
-        .sidenav .disabled-link:hover { color: #666 !important; }
-
-        /* --- Main Content Area Styling --- */
-        #hero {
-            min-height: 450px;
-            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80') no-repeat center center/cover; /* Lớp phủ tối hơn chút */
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-        }
-        #hero h1 { font-size: 3.5em; margin-bottom: 15px; text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8); }
-        #hero p { font-size: 1.3em; margin-bottom: 25px; }
-
-        /* === THAY ĐỔI: Màu và hiệu ứng nút CTA === */
-        #hero .cta-button {
-            display: inline-block;
-            background-color: #007bff; /* Màu xanh dương chính */
-            color: #fff;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Thêm transition cho shadow */
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border: none; /* Đảm bảo không có viền */
-            /* Thêm đổ bóng nhẹ */
-            box-shadow: 0 3px 6px rgba(0, 123, 255, 0.3);
-        }
-        #hero .cta-button:hover {
-             background-color: #0056b3; /* Xanh đậm hơn khi hover */
-             transform: translateY(-3px); /* Nhấc lên nhiều hơn chút */
-             /* Đổ bóng lớn hơn khi hover */
-             box-shadow: 0 6px 12px rgba(0, 86, 179, 0.4);
-         }
-
-        /* --- Content Sections --- */
-        .content-section { padding: 60px 0; text-align: center; }
-        .content-section.bg-light { background-color: #ffffff; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; } /* Nền trắng, viền nhạt hơn */
-        .content-section h2 { margin-bottom: 40px; font-size: 2.5em; color: #333; position: relative; display: inline-block; }
-        .content-section h2::after { content: ''; display: block; width: 60px; height: 3px; background: #007bff; margin: 10px auto 0; } /* Gạch chân màu xanh */
-
-        .feature-box-container { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px; }
-        .feature-box {
-            border: 1px solid #e0e0e0; /* Viền nhạt hơn */
-            padding: 30px;
-            width: 30%;
-            background: #fff;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Đổ bóng tinh tế hơn */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .feature-box:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
-        .feature-box img { display: block; margin: 0 auto 15px auto; max-width: 60px; height: auto; } /* Icon nhỏ hơn */
-        .feature-box h3 { margin-bottom: 10px; color: #007bff; }
-        .feature-box p { color: #555; font-size: 0.95em; } /* Chữ nhỏ hơn chút */
-        .feature-box strong { color: #dc3545; font-size: 1.1em; display: block; margin-top: 10px; } /* Giá nổi bật hơn */
-
-
-        /* --- Footer --- */
-        footer {
-            padding: 30px 0;
-            margin-top: 40px;
-            color: #bbb;
-            background-color: #343a40; /* Nền tối footer */
-            text-align: center;
-        }
-        footer p { margin: 0; font-size: 0.9em; }
-
-        /* --- Responsive --- */
-         @media screen and (max-width: 768px) {
-             .feature-box { width: 45%; }
-              #hero h1 { font-size: 2.5em; }
-             #hero p { font-size: 1.1em; }
-             .content-section h2 { font-size: 2em; }
-             /* Đảm bảo sidenav không quá rộng trên tablet */
-             .sidenav { max-width: 300px; /* Hoặc giá trị % nhỏ hơn */ }
-             /* Nếu đẩy nội dung, margin-left cũng phải theo max-width này */
-             /* body.sidenav-open #main-content { margin-left: 300px; } */
-         }
-          @media screen and (max-width: 480px) {
-             .feature-box { width: 90%; }
-             header { padding-left: 15px; padding-right: 15px; }
-             /* Sidenav có thể chiếm nhiều hơn trên mobile */
-              .sidenav { width: 0; /* Reset lại width để JS điều khiển % */ }
-              /* Hàm openNav sẽ đặt lại width */
-         }
-
-         /* (Tùy chọn) Thêm class vào body khi menu mở để làm mờ nền */
-         body.sidenav-open::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ màu đen mờ */
-            z-index: 1000; /* Nằm dưới sidenav nhưng trên header/main */
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0.5s;
-         }
-          body.sidenav-open.show-overlay::after {
-             opacity: 1;
-             visibility: visible;
-         }
-
-    </style>
-</head>
-<body>
-
-    <!-- Side Navigation -->
-    <div id="mySidenav" class="sidenav">
-        <!-- === NÚT ĐÓNG (X) NẰM Ở ĐÂY === -->
-        <a href="javascript:void(0)" class="closebtn" id="closeBtn">×</a>
-        <!-- Nút Dropdown cho Nạp tiền -->
-        <button class="dropdown-toggle">Nạp tiền <span style="font-size: 0.8em;">▼</span></button>
-        <div class="sidenav-dropdown-container">
-            <a href="#">Thẻ cào</a>
-            <a href="#" class="disabled-link" aria-disabled="true">Ngân hàng (Đang cập nhật)</a>
-        </div>
-        <!-- Các link khác -->
-        <a href="#">Shop acc</a>
-        <a href="caythue.html">Đặt đơn cày thuê</a>
-        <a href="#">Thông tin tài khoản</a>
-        <a href="#">Đăng xuất</a>
-    </div>
-
-    <!-- Header với nút mở menu -->
-    <header>
-        <button class="menu-toggle" id="openBtn">☰</button>
-        <div id="branding">
-             <h1><a href="#">Shop BloxFruits</a></h1>
-        </div>
-    </header>
-
-    <!-- Phần nội dung chính của trang -->
-    <main id="main-content">
-        <section id="hero">
-            <h1>Chào Mừng Đến Với Shop BloxFruits</h1>
-            <p>Uy tín, Nhanh chóng, Bảo mật - Trải nghiệm tốt nhất!</p>
-            <a href="#" class="cta-button">Khám Phá Ngay</a>
-        </section>
-
-        <section id="featured-accounts" class="content-section bg-light">
-            <div class="container">
-                <h2>Dịch Vụ Nổi Bật</h2>
-                <div class="feature-box-container">
-                     <div class="feature-box">
-                        <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=A" alt="Icon Game A" >
-                         <h3>Cày Level </h3>
-                         <p>Level 1 -> Level Max</p>
-                         <strong>Giá: 25.000đ</strong>
-                     </div>
-                     <div class="feature-box">
-                         <img src="https://via.placeholder.com/60x60/28a745/ffffff?text=B" alt="Icon Game B" >
-                         <h3>Gạt Cần </h3>
-                          <p>Gạt cần giá rẻ, Yêu cầu: Có đủ điều kiện gạt cần</p>
-                         <strong>Giá: 15.000đ</strong>
-                    </div>
-                     <div class="feature-box">
-                         <img src="https://via.placeholder.com/60x60/ffc107/ffffff?text=C" alt="Icon Game C" >
-                         <h3>Acc Game A #789</h3>
-                          <p>Rank Vàng, Tướng cơ bản, Giá rẻ...</p>
-                         <strong>Giá: 150.000đ</strong>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-         <section id="why-choose-us" class="content-section">
-            <div class="container">
-                <h2>Tại Sao Chọn Chúng Tôi?</h2>
-                 <div class="feature-box-container">
-                     <div class="feature-box">
-                         <img src="https://via.placeholder.com/60x60/17a2b8/ffffff?text=✔" alt="Uy tín Icon" >
-                         <h3>Uy Tín Hàng Đầu</h3>
-                         <p>Cam kết thông tin tài khoản chính xác, bảo hành đầy đủ.</p>
-                    </div>
-                     <div class="feature-box">
-                          <img src="https://via.placeholder.com/60x60/fd7e14/ffffff?text=⚡" alt="Nhanh chóng Icon" >
-                         <h3>Giao Dịch Nhanh Chóng</h3>
-                         <p>Nhận tài khoản tự động ngay sau khi thanh toán thành công.</p>
-                    </div>
-                     <div class="feature-box">
-                         <img src="https://via.placeholder.com/60x60/6f42c1/ffffff?text=🎧" alt="Hỗ trợ Icon" >
-                         <h3>Hỗ Trợ 24/7</h3>
-                         <p>Đội ngũ support luôn sẵn sàng giải đáp mọi thắc mắc của bạn.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>Bản quyền © 2023 Shop BloxFruits. Thiết kế với ❤️</p>
-    </footer>
-
-    <script>
-        // Lấy các phần tử
-        const openBtn = document.getElementById('openBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        const sidenav = document.getElementById('mySidenav');
-        const body = document.body; // Lấy thẻ body
-
-        // Hàm mở menu
-        function openNav() {
-            // Điều chỉnh width tùy theo màn hình nếu cần thiết
-             const screenWidth = window.innerWidth;
-             if (screenWidth <= 480) {
-                 sidenav.style.width = "80%"; // Rộng hơn trên mobile
-             } else if (screenWidth <= 768) {
-                 sidenav.style.width = "300px"; // Hoặc % nhỏ hơn
-             } else {
-                 sidenav.style.width = "280px"; // Width cố định hoặc % trên desktop
-             }
-            // Thêm class để làm mờ nền (sau một khoảng trễ nhỏ để khớp transition)
-             body.classList.add('sidenav-open');
+        // 2. Ẩn form và hiện thông báo thành công
+        serviceOrderForm.style.display = 'none';
+        if (orderSuccessMessage) {
+             orderSuccessMessage.style.display = 'block';
+             // Tự động ẩn thông báo và hiện lại form sau vài giây
              setTimeout(() => {
-                  body.classList.add('show-overlay');
-             }, 10); // Trễ 10ms
+                 orderSuccessMessage.style.display = 'none';
+                 serviceOrderForm.reset(); // Xóa các trường đã nhập
+                 serviceOrderForm.style.display = 'block'; // Hiện lại form
+                 // Có thể chuyển về trang chủ sau khi thành công
+                 // showSection('homepage-content');
+             }, 6000); // Ví dụ: hiện thông báo trong 6 giây
+        } else {
+            serviceOrderForm.reset(); // Reset form nếu không có thông báo
         }
 
-        // Hàm đóng menu
-        function closeNav() {
-            sidenav.style.width = "0";
-            // Xóa class làm mờ nền
-            body.classList.remove('show-overlay');
-             // Xóa class sidenav-open sau khi transition mờ kết thúc
-             setTimeout(() => {
-                  body.classList.remove('sidenav-open');
-             }, 500); // Thời gian khớp với transition của overlay
-        }
+        // **LƯU Ý:** Đây là nơi bạn sẽ thêm code để gửi dữ liệu `data`
+        // đến backend (PHP, Node.js...) hoặc dịch vụ như Formsubmit.co
+        // để thực sự nhận được thông báo đơn hàng.
+    });
+}
 
-        // Gán sự kiện click cho nút mở và đóng
-        openBtn.addEventListener('click', openNav);
-        closeBtn.addEventListener('click', closeNav);
+// (Tùy chọn nâng cao) Đóng menu khi nhấn phím Escape
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && body.classList.contains('sidenav-open')) {
+        closeNav();
+    }
+});
 
-        // --- JavaScript cho Dropdown trong Sidenav ---
-        const dropdownBtns = document.querySelectorAll(".sidenav .dropdown-toggle");
-        dropdownBtns.forEach(btn => {
-            btn.addEventListener("click", function() {
-                const dropdownContainer = this.nextElementSibling;
-                 // Đóng các dropdown khác
-                document.querySelectorAll('.sidenav-dropdown-container').forEach(container => {
-                    if (container !== dropdownContainer && container.style.display === "block") {
-                        container.style.display = "none";
-                        // Reset icon mũi tên nếu có
-                        const otherBtn = container.previousElementSibling;
-                         if(otherBtn && otherBtn.querySelector('span')) {
-                             otherBtn.querySelector('span').textContent = '▼';
-                         }
-                    }
-                });
-                 // Toggle cái được click
-                const arrowSpan = this.querySelector('span'); // Tìm icon mũi tên
-                if (dropdownContainer.style.display === "block") {
-                    dropdownContainer.style.display = "none";
-                     if(arrowSpan) arrowSpan.textContent = '▼';
-                } else {
-                    dropdownContainer.style.display = "block";
-                     if(arrowSpan) arrowSpan.textContent = '▲';
-                }
-            });
-        });
-
-         // (Tùy chọn) Đóng menu nếu click vào lớp phủ overlay
-         body.addEventListener('click', function(event) {
-             // Kiểm tra xem có click vào lớp phủ không (được tạo bởi ::after)
-             // và menu đang mở
-            if (body.classList.contains('show-overlay') && event.target === body) {
-                 // Cách kiểm tra đơn giản nhất là xem event.target có phải là body không
-                 // khi lớp phủ đang hiển thị (do ::after không bắt được event trực tiếp)
-                 // Hoặc kiểm tra xem có click vào #main-content không khi menu mở
-                 closeNav();
-            }
-         });
-
-    </script>
-</body>
-</html>
+// Hiển thị trang chủ mặc định khi tải trang
+document.addEventListener('DOMContentLoaded', () => {
+    // Đảm bảo chỉ có section trang chủ được active ban đầu
+    showSection('homepage-content');
+});
